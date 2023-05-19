@@ -1,0 +1,217 @@
+import pygame
+import random
+from pygame import mixer
+#Instantiate mixer
+mixer.init()
+
+#Load audio file
+mixer.music.load('chacha.mp3')
+
+print("music started playing....")
+
+#Set preferred volume
+mixer.music.set_volume(0.2)
+
+#Play the music
+mixer.music.play()
+
+gel = pygame.image.load('jelly1.png')
+gel1 = pygame.image.load('jelly2.png')
+	
+pygame.init()  
+pygame.display.set_caption("sprite sheet")  # sets the window title
+screen = pygame.display.set_mode((800, 800))  # creates game screen
+background = pygame.image.load("sea background.png")
+clock = pygame.time.Clock() #set up clock
+gameover = False #variable to run our game loop
+
+class jelly1:
+   def __init__(self,xpos,ypos):
+       self.xpos = xpos
+       self.ypos = ypos
+       self.isalive = True
+   def draw(self):
+       screen.blit(gel1 ,(self.xpos, self.ypos, 40, 40))
+   def move(self,x,y):
+    self.xpos += vx
+    self.ypos += vy
+
+armada1 = []
+for i in range (2):
+    for j in range (8):
+        armada1.append(jelly1(random.randrange(100,800),random.randrange(100,800)))
+
+
+
+
+
+
+class jelly:
+   def __init__(self,xpos,ypos):
+       self.xpos = xpos
+       self.ypos = ypos
+       self.isalive = True
+   def draw(self):
+       screen.blit(gel ,(self.xpos, self.ypos, 40, 40))
+   def move(self,x,y):
+    self.xpos += vx
+    self.ypos += vy
+
+armada = []
+for i in range (2):
+    for j in range (8):
+        armada.append(jelly(random.randrange(100,800),random.randrange(300,600)))
+
+
+
+
+#CONSTANTS
+LEFT=0
+RIGHT=1
+UP = 2
+DOWN = 3
+
+#MAP: 1 is grass, 2 is brick
+map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0],
+       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1 ,1, 1]]
+
+
+dirt = pygame.image.load('sand.png') #load your spritesheet
+weed = pygame.image.load('seweed.png')
+Link = pygame.image.load('fish.png') 
+frameWidth = 32 
+frameHeight = 48
+
+
+#player variables
+xpos = 500 #xpos of player
+ypos = 300 #ypos of player
+vx = 0 #x velocity of player
+vy = 0 #y velocity of player
+keys = [False, False, False, False,False]
+isOnGround = True #this variable stops gravity from pulling you down more when on a platform
+
+#animation variables variables
+
+RowNum = 0 #for left animation, this will need to change for other animations
+frameNum = 0
+ticker = 0
+
+
+while not gameover:
+    clock.tick(60) #FPS
+    
+    for event in pygame.event.get(): #quit game if x is pressed in top corner
+        if event.type == pygame.QUIT:
+            gameover = True
+      
+        if event.type == pygame.KEYDOWN: #keyboard input
+            if event.key == pygame.K_LEFT:
+                keys[LEFT]=True
+            elif event.key == pygame.K_RIGHT:
+                keys[RIGHT]=True
+            elif event.key == pygame.K_UP:
+                keys[UP]=True
+            elif event.key == pygame.K_DOWN:
+                keys[DOWN]=True
+
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT:
+                keys[LEFT]=False
+            elif event.key == pygame.K_RIGHT:
+                keys[RIGHT]=False
+            elif event.key == pygame.K_UP:
+                keys[UP]=False
+            elif event.key == pygame.K_DOWN:
+                keys[DOWN] = False
+       
+
+    #LEFT MOVEMENT
+    if keys[LEFT]==True:
+        vx=-3
+        RowNum = 1
+    
+       
+        direction = LEFT
+    #RIGHT MOVEMENT
+    elif keys[RIGHT] == True:
+        vx = 3
+        RowNum = 0
+   
+        direction = RIGHT
+    #turn off velocity
+    else:
+        vx = 0
+        #JUMPING
+    if keys[UP] == True: 
+        vy = -5
+
+    elif keys[DOWN] == True:
+        vy = +5
+
+    else:
+        vy = 0
+     
+       
+
+
+       
+        
+    
+    
+        
+    xpos+=vx #update player xpos
+    ypos+=vy
+    for i in range (len(armada)):
+        armada[i].move(vx, vy)
+    for i in range (len(armada1)):
+        armada1[i].move(vx, vy)
+  
+    
+
+        
+    #ANIMATION-------------------------------------------------------------------
+        
+    # Update Animation Information
+
+    
+    # RENDER--------------------------------------------------------------------------------
+    # Once we've figured out what frame we're on and where we are, time to render.
+            
+    screen.fill((0,0,0)) #wipe screen so it doesn't smear
+    screen.blit(background,(0,0))
+
+   
+    #draw map
+    for i in range (16):
+        for j in range(16):
+            if map[i][j]==1:
+                screen.blit(dirt, (j*50, i*50), (0, 0, 50, 50))
+           
+            if map[i][j]==3:
+                screen.blit(weed, (j*50, i*50), (0, 0, 50, 50))
+    
+    screen.blit(Link, (xpos, ypos), (frameWidth*frameNum, RowNum*frameHeight, frameWidth, frameHeight)) 
+    for i in range(len(armada)):
+        armada[i].draw()
+    for i in range(len(armada1)):
+        armada1[i].draw()
+
+    pygame.display.flip()#this actually puts the pixel on the screen
+    
+#end game loop------------------------------------------------------------------------------
+pygame.quit()
